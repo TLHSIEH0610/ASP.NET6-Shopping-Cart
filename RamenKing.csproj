@@ -6,4 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Views\Ramen\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Ramen\" />
+  </ItemGroup>
 </Project>

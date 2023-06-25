@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewData["Title"] = "AllRamen";
+    var RamenList = ViewData["allRamen"];
+}
+
+
+<h1>@ViewData["Title"]</h1>
+
+<p>View All Ramen</p>
+
+@foreach (var r in (IEnumerable<Ramen>)RamenList)
+{
+    <div>
+        <p>@r.Name</p>
+        <p>@r.Id</p>
+    </div>
+
+}

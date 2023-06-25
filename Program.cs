@@ -1,8 +1,11 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using RamenKing.Models;
+
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddTransient<IRamenRepository, RamenRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
