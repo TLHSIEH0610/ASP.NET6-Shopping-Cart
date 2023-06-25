@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 
 namespace RamenKing.Models
 {
@@ -12,34 +12,25 @@ namespace RamenKing.Models
 
     public class RamenRepository : IRamenRepository
     {
-        private List<Ramen> _ramen;
+
+        private readonly MvcRamenContext _context;
 
 
-        public RamenRepository()
+        public RamenRepository(MvcRamenContext ramenContext)
         {
-            if (_ramen == null)
-            {
-                InitializeRamen();
-            }
+            _context = ramenContext;
         }
 
-        private void InitializeRamen()
-        {
-            _ramen = new List<Ramen>
-            {
-               new Ramen { Id = 1, Name = "First", Price = 12, Description = "Good", ImageURL=""},
-                new Ramen { Id = 2, Name = "Second", Price = 10,  Description = "SooSOo", ImageURL=""},
-            };
-        }
+
 
         public IEnumerable<Models.Ramen> GetAllRamen()
         {
-            return _ramen;
+            return _context.Ramen;
         }
 
         public Models.Ramen GetRamenById(int Id)
         {
-            return _ramen.FirstOrDefault((r) => r.Id == Id);
+            return _context.Ramen.FirstOrDefault((r) => r.Id == Id);
         }
     }
 }

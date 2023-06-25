@@ -1,12 +1,25 @@
 ﻿using RamenKing.Models;
-
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IRamenRepository, RamenRepository>();
+
+builder.Services.AddDbContext<MvcRamenContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("MvcRamenContext")));
+
 var app = builder.Build();
+
+//Seed
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    SeedData.Initialize(services);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
