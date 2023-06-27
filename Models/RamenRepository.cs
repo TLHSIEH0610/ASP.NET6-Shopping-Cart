@@ -23,12 +23,12 @@ namespace RamenKing.Models
 
 
 
-        public IEnumerable<Models.Ramen> GetAllRamen()
+        public IEnumerable<Ramen> GetAllRamen()
         {
             return _context.Ramen;
         }
 
-        public Models.Ramen GetRamenById(int Id)
+        public Ramen GetRamenById(int Id)
         {
             return _context.Ramen.FirstOrDefault((r) => r.Id == Id);
         }

@@ -1,0 +1,25 @@
+﻿@model Ramen
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+
+
+
+
+
+<div class="container ">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/ramen/all" >All</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+        </ol>
+    </nav>
+    <div class="text-center">
+
+        <h2>@Model.Name</h2>
+        <img src="@Model.ImageURL" width="700" height="700" class="rounded img-fluid img-thumbnail" alt="...">
+        <div class="my-5"> <p>@Model.LongDescription</p></div>
+        <button type="button" class="btn btn-primary">Add to Cart</button>
+    </div>
+</div>

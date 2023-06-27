@@ -18,15 +18,16 @@ namespace RamenKing.Controllers
             _ramenRepository = ramenRepository;
 
         }
-        public IList<String> Index()
-        {
-            return new List<String> { "BAC", "SAPOOP" };
-        }
 
         public ActionResult All()
         {
             ViewData["allRamen"] = _ramenRepository.GetAllRamen();
             return View(nameof(All));
+        }
+
+        public ActionResult Detail(int Id)
+        {
+            return View(nameof(Detail),_ramenRepository.GetRamenById(Id));
         }
     }
 }
