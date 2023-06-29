@@ -1,6 +1,7 @@
-﻿using RamenKing.Models;
+using RamenKing.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,9 @@ builder.Services.AddTransient<IRamenRepository, RamenRepository>();
 
 builder.Services.AddDbContext<MvcRamenContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MvcRamenContext")));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<MvcRamenContext>();
 
 var app = builder.Build();
 
@@ -33,12 +37,13 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();;
 
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Ramen}/{action=All}/{id?}");
-
+app.MapRazorPages();
 app.Run();
 
