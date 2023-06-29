@@ -9,7 +9,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IRamenRepository, RamenRepository>();
 
 builder.Services.AddDbContext<MvcRamenContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("MvcRamenContext")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MvcRamenContext")));
 
 var app = builder.Build();
 
