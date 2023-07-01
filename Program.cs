@@ -1,19 +1,21 @@
-using RamenKing.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
+using RamenKing.Data;
+using RamenKing.Repository;
+using RamenKing.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IRamenRepository, RamenRepository>();
-
-builder.Services.AddDbContext<MvcRamenContext>(options =>
+builder.Services.AddTransient<ICartRepository, CartRepository>();
+builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MvcRamenContext")));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<MvcRamenContext>();
+    .AddEntityFrameworkStores<AppDbContext>();
 
 var app = builder.Build();
 

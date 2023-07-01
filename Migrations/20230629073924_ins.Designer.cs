@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using RamenKing.Models;
+using RamenKing.Data;
 
 #nullable disable
 
 namespace RamenKing.Migrations
 {
-    [DbContext(typeof(MvcRamenContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20230629073924_ins")]
     partial class ins
     {
