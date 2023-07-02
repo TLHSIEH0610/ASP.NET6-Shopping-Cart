@@ -25,7 +25,7 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
 
-    SeedData.Initialize(services);
+   await SeedData.Initialize(services);
 }
 
 // Configure the HTTP request pipeline.
@@ -47,6 +47,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Ramen}/{action=All}/{id?}");
-//app.MapRazorPages();
+
 app.Run();
 

@@ -14,14 +14,25 @@ namespace RamenKing.Data
 
         }
 
-        public static async void Initialize(IServiceProvider serviceProvider)
+        public static async Task<Boolean> Initialize(IServiceProvider serviceProvider)
+        {
+           await  SeedUsers(serviceProvider);
+           SeedRamen(serviceProvider);
+
+
+            return true;
+
+
+        }
+        public static void SeedRamen(IServiceProvider serviceProvider)
         {
             using (var context = new AppDbContext(serviceProvider.GetRequiredService<DbContextOptions<AppDbContext>>()))
             {
+
                 // Look for any Ramen.
                 if (context.Ramens.Any())
                 {
-                    return;   // DB has been seeded
+                    return ;   // DB has been seeded
                 }
                 context.Ramens.AddRange(
                 new Ramen { Name = "Sapporo Miso Ramen", Price = 2000, ShortDescription = "Using chicken or pork bones combined with red miso to make the broth.", ImageURL = "/images/r1.jpeg", LongDescription = "On the northern island of Hokkaido, the city of Sapporo was the first to dream up their signature miso Ramen. Using chicken or pork bones combined with red miso to make the broth, you get a truly rich and heart-warming soup for those chilly weather days. This noodle and broth combo is topped with bean sprouts, butter, corn, leeks and as Hokkaido is home to major fishing ports, adding seafood to the soup is also common." },
@@ -35,50 +46,57 @@ namespace RamenKing.Data
                 new Ramen { Name = "Sapporo Ramen", Price = 3100, ShortDescription = "Celebrated as being one of the three great ramens from the Hokkaido.", ImageURL = "/images/r9.jpeg", LongDescription = "Celebrated as being one of the three great ramens from the Hokkaido region, sapporo ramen is buttery and rich. A miso soybean base sets the scene along with the tonkotsu pork bone broth and the golden curly noodles. Add in some juicy char sui, bamboo shoots, green onions, and vegetables like cabbage, corn, and bean sprouts and you have a heart-warming combo. A melting pat of butter and seasonal seafood also make an appearance in sapporo ramen meaning every delicious box is well and truly ticked.\n\n" }
                 );
 
-                //Upsert Roles
-                var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
-                {
-                    roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-                }
-                if (!await roleManager.RoleExistsAsync(UserRoles.User))
-                {
-                    roleManager.CreateAsync(new IdentityRole(UserRoles.User));
-                }
-
-                //Upsert Users
-                var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
-                if (await userManager.FindByEmailAsync("admin@ramenking.com") == null)
-                {
-                    var newAdmin = new AppUser()
-                    {
-                        UserName = "Admin",
-                        Email = "admin@ramenking.com",
-                        EmailConfirmed = true,
-                        Address = "23 Ramen Street, Geelong, VIC"
-    ,
-                    };
-                    await userManager.CreateAsync(newAdmin, "admin");
-                    await userManager.AddToRoleAsync(newAdmin, UserRoles.Admin);
-                }
-                if (await userManager.FindByEmailAsync("user@ramenking.com") == null)
-                {
-                    var newUser = new AppUser()
-                    {
-                        UserName = "User",
-                        Email = "user@ramenking.com",
-                        EmailConfirmed = true,
-                        Address = "999 Any Street, Geelong, VIC"
-    ,
-                    };
-                    await userManager.CreateAsync(newUser, "user");
-                    await userManager.AddToRoleAsync(newUser, UserRoles.User);
-                }
 
                 context.SaveChanges();
             }
 
 
+        }
+
+        public static async Task<IdentityResult> SeedUsers(IServiceProvider serviceProvider)
+        {
+            //Upsert Roles
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var hasAdmin = await roleManager.RoleExistsAsync(UserRoles.Admin);
+            if (!hasAdmin)
+            {
+               await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+            }
+            if (!await roleManager.RoleExistsAsync(UserRoles.User))
+            {
+               await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+            }
+
+            //Upsert Users
+            var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+            if (await userManager.FindByEmailAsync("admin@ramenking.com") == null)
+            {
+                var newAdmin = new AppUser()
+                {
+                    UserName = "Admin",
+                    Email = "admin@ramenking.com",
+                    EmailConfirmed = true,
+                    PostalAddress = "23 Ramen Street, Geelong, VIC"
+,
+                };
+                await userManager.CreateAsync(newAdmin, "admin@Admin123");
+                await userManager.AddToRoleAsync(newAdmin, UserRoles.Admin);
+            }
+            if (await userManager.FindByEmailAsync("user@ramenking.com") == null)
+            {
+                var newUser = new AppUser()
+                {
+                    UserName = "User",
+                    Email = "user@ramenking.com",
+                    EmailConfirmed = true,
+                    PostalAddress = "999 Any Street, Geelong, VIC"
+,
+                };
+                await userManager.CreateAsync(newUser, "user@User123");
+                await userManager.AddToRoleAsync(newUser, UserRoles.User);
+            }
+
+            return IdentityResult.Success;
 
         }
     }
