@@ -8,11 +8,15 @@
 
   <ItemGroup>
     <None Remove="Views\Ramen\" />
+    <None Remove="Views\Account\" />
+    <None Remove="ViewModel\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
     <Folder Include="Views\Ramen\" />
     <Folder Include="wwwroot\images\" />
+    <Folder Include="Views\Account\" />
+    <Folder Include="ViewModel\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\images\" />
