@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using RamenKing.Data;
 using RamenKing.Repository;
 using RamenKing.Interfaces;
+using RamenKing.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,7 @@ builder.Services.AddTransient<ICartRepository, CartRepository>();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MvcRamenContext")));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
 
 var app = builder.Build();
@@ -46,6 +47,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Ramen}/{action=All}/{id?}");
-app.MapRazorPages();
+//app.MapRazorPages();
 app.Run();
 

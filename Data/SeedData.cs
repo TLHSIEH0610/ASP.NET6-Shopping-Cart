@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RamenKing.Models;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace RamenKing.Data
 {
@@ -12,7 +14,7 @@ namespace RamenKing.Data
 
         }
 
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static async void Initialize(IServiceProvider serviceProvider)
         {
             using (var context = new AppDbContext(serviceProvider.GetRequiredService<DbContextOptions<AppDbContext>>()))
             {
@@ -32,8 +34,52 @@ namespace RamenKing.Data
                 new Ramen { Name = "Kitakata Ramen", Price = 3100, ShortDescription = "This regional style of ramen hails from the city with the most ramen shops per capita.", ImageURL = "/images/r8.jpeg", LongDescription = "This regional style of ramen hails from the city with the most ramen shops per capita. Kitakata is a city in Fukushima and this local ramen is built upon a soy sauce base before being topped with fish cakes, green onions, char sui, and bamboo shoots. Along with a soy sauce broth there’s also niboshi (sardines), Tonkotsu, and sometimes vegetables or chicken to bring a little extra oomph and depth. Kitakata ramen also uses hirauchi jukusei takasuimen noodles that are thick and wavy and have a fabulously firm texture thanks to their lengthy maturing period.\n\n" },
                 new Ramen { Name = "Sapporo Ramen", Price = 3100, ShortDescription = "Celebrated as being one of the three great ramens from the Hokkaido.", ImageURL = "/images/r9.jpeg", LongDescription = "Celebrated as being one of the three great ramens from the Hokkaido region, sapporo ramen is buttery and rich. A miso soybean base sets the scene along with the tonkotsu pork bone broth and the golden curly noodles. Add in some juicy char sui, bamboo shoots, green onions, and vegetables like cabbage, corn, and bean sprouts and you have a heart-warming combo. A melting pat of butter and seasonal seafood also make an appearance in sapporo ramen meaning every delicious box is well and truly ticked.\n\n" }
                 );
+
+                //Upsert Roles
+                var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
+                {
+                    roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+                }
+                if (!await roleManager.RoleExistsAsync(UserRoles.User))
+                {
+                    roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+                }
+
+                //Upsert Users
+                var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+                if (await userManager.FindByEmailAsync("admin@ramenking.com") == null)
+                {
+                    var newAdmin = new AppUser()
+                    {
+                        UserName = "Admin",
+                        Email = "admin@ramenking.com",
+                        EmailConfirmed = true,
+                        Address = "23 Ramen Street, Geelong, VIC"
+    ,
+                    };
+                    await userManager.CreateAsync(newAdmin, "admin");
+                    await userManager.AddToRoleAsync(newAdmin, UserRoles.Admin);
+                }
+                if (await userManager.FindByEmailAsync("user@ramenking.com") == null)
+                {
+                    var newUser = new AppUser()
+                    {
+                        UserName = "User",
+                        Email = "user@ramenking.com",
+                        EmailConfirmed = true,
+                        Address = "999 Any Street, Geelong, VIC"
+    ,
+                    };
+                    await userManager.CreateAsync(newUser, "user");
+                    await userManager.AddToRoleAsync(newUser, UserRoles.User);
+                }
+
                 context.SaveChanges();
             }
+
+
+
         }
     }
 }
