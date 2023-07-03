@@ -4,6 +4,7 @@ using RamenKing.Data;
 using RamenKing.Models;
 using RamenKing.Interfaces;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace RamenKing.Repository
 {
@@ -12,19 +13,50 @@ namespace RamenKing.Repository
 
         private readonly AppDbContext _context;
 
+
         public RamenRepository(AppDbContext ramenContext)
         {
             _context = ramenContext;
         }
 
-        public IEnumerable<Ramen> GetAllRamen()
+
+        public async Task<IEnumerable<Ramen>> GetAllRamen()
         {
-            return _context.Ramens.ToList();
+            return await _context.Ramens.ToListAsync();
         }
 
-        public Ramen GetRamenById(int Id)
+
+        public async Task<Ramen> GetRamenById(int Id)
         {
-            return _context.Ramens.FirstOrDefault((r) => r.Id == Id);
+            return await _context.Ramens.AsNoTracking().FirstOrDefaultAsync((r) => r.Id == Id);
+        }
+
+
+        public bool Add(Ramen ramen)
+        {
+            _context.Add(ramen);
+            return Save();
+        }
+
+
+        public bool Update(Ramen ramen)
+        {
+            _context.Update(ramen);
+            return Save();
+        }
+
+
+        public bool Delete(Ramen ramen)
+        {
+            _context.Remove(ramen);
+            return Save();
+        }
+
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0;
         }
     }
 }

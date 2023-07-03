@@ -1,27 +1,45 @@
-﻿
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@model IEnumerable<Ramen>;
 @{
     ViewData["Title"] = "AllRamen";
-    var RamenList = ViewData["allRamen"];
 }
 
-
-<h1>All Ramen</h1>
-
-<div class="container text-center">
-    <div class="row">
-        @foreach (var r in (IEnumerable<Ramen>)RamenList)
+<div class="row justify-content-between align-items-center">
+    <div class="col-3">
+        <h1>All Ramen</h1>
+    </div>
+    <div class="col-1">
+        @if (SignInManager.IsSignedIn(User) && User.IsInRole("admin"))
         {
-            <div class="col-3">
-                <div class="card my-2" style="width: 18rem;">
-                    <img src="@r.ImageURL" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">@r.Name</h5>
-                        <p class="card-text text-truncate">@r.ShortDescription</p>
-                        <a class="btn btn-primary" asp-controller="Ramen" asp-action="Detail" asp-route-id="@r.Id">Detail</a>
-                    </div>
-                </div>
-
-            </div>
+            <a class="btn btn-primary" asp-controller="Ramen" asp-action="Create">Add</a>
         }
     </div>
-</div>
+    </div>
+
+    <div class="container text-center">
+        <div class="row">
+            @foreach (var r in Model)
+            {
+                <div class="col-3">
+                    <div class="card my-2" style="width: 18rem;">
+                        <img src="@r.ImageURL" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">@r.Name</h5>
+                            <p class="card-text text-truncate">@r.ShortDescription</p>
+
+                            <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                <a class="btn btn-outline-primary" asp-controller="Ramen" asp-action="Detail" asp-route-id="@r.Id">Detail</a>
+                                @if (SignInManager.IsSignedIn(User) && User.IsInRole("admin"))
+                                {
+                                    <a class="btn btn-outline-primary" asp-controller="Ramen" asp-action="Edit" asp-route-id="@r.Id">Edit</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
