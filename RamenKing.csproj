@@ -10,6 +10,8 @@
     <None Remove="Views\Ramen\" />
     <None Remove="Views\Account\" />
     <None Remove="ViewModel\" />
+    <None Remove="Services\" />
+    <None Remove="Helpers\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
@@ -17,6 +19,8 @@
     <Folder Include="wwwroot\images\" />
     <Folder Include="Views\Account\" />
     <Folder Include="ViewModel\" />
+    <Folder Include="Services\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\images\" />
@@ -31,5 +35,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.14" />
+    <PackageReference Include="CloudinaryDotNet" Version="1.21.0" />
   </ItemGroup>
 </Project>

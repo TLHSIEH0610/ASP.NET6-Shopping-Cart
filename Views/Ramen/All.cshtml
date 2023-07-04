@@ -4,6 +4,7 @@
 @model IEnumerable<Ramen>;
 @{
     ViewData["Title"] = "AllRamen";
+    var isAdmin = SignInManager.IsSignedIn(User) && User.IsInRole("admin");
 }
 
 <div class="row justify-content-between align-items-center">
@@ -11,7 +12,7 @@
         <h1>All Ramen</h1>
     </div>
     <div class="col-1">
-        @if (SignInManager.IsSignedIn(User) && User.IsInRole("admin"))
+        @if (isAdmin)
         {
             <a class="btn btn-primary" asp-controller="Ramen" asp-action="Create">Add</a>
         }
@@ -30,10 +31,13 @@
                             <p class="card-text text-truncate">@r.ShortDescription</p>
 
                             <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                <a class="btn btn-outline-primary" asp-controller="Ramen" asp-action="Detail" asp-route-id="@r.Id">Detail</a>
-                                @if (SignInManager.IsSignedIn(User) && User.IsInRole("admin"))
+                                <a class="btn btn-primary" asp-controller="Ramen" asp-action="Detail" asp-route-id="@r.Id">Detail</a>
+                                @if (isAdmin)
                                 {
-                                    <a class="btn btn-outline-primary" asp-controller="Ramen" asp-action="Edit" asp-route-id="@r.Id">Edit</a>
+                                        
+                                            <a class="btn btn-info" asp-controller="Ramen" asp-action="Edit" asp-route-id="@r.Id">Edit</a>
+                                            <a class="btn btn-danger" asp-controller="Ramen" asp-action="Delete" asp-route-id="@r.Id">Delete</a>
+                                        
                                 }
                             </div>
                         </div>

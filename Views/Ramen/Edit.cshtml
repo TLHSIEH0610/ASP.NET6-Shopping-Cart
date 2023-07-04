@@ -1,6 +1,7 @@
-﻿@model Ramen;
+﻿@using RamenKing.ViewModel;
+@model EditRamenViewModel;
 
-<form asp-action="Edit">
+<form asp-action="Edit" enctype="multipart/form-data">
     <div class="form-group">
         <label asp-for="Name">Name</label>
         <input asp-for="Name" class="form-control" placeholder="Name">
@@ -22,9 +23,13 @@
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ImageURL">ImageURL</label>
-        <input asp-for="ImageURL" class="form-control" placeholder="ImageURL">
-        <span asp-validation-for="ImageURL" class="text-danger"></span>
+        <label asp-for="Photo">Photo</label>
+        <input asp-for="Photo" type="file" class="form-control" placeholder="Photo">
+        <span asp-validation-for="Photo" class="text-danger"></span>
     </div>
+    @if (Model.ImageURL != null)
+    {
+        <img src="@Model.ImageURL" width="300" height="300" class="img-thumbnail" alt="...">
+    }
     <button type="submit" class="btn btn-primary mt-3">Submit</button>
 </form>

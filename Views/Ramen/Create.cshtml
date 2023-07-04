@@ -1,5 +1,31 @@
-﻿@page
-@{
-}
+﻿@using RamenKing.ViewModel;
+@model EditRamenViewModel;
 
-<p>Create Ramen</p>
+<form asp-action="Create" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="Name">Name</label>
+        <input asp-for="Name" class="form-control" placeholder="Name">
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ShortDescription">ShortDescription</label>
+        <input asp-for="ShortDescription" class="form-control" placeholder="ShortDescription">
+        <span asp-validation-for="ShortDescription" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LongDescription">LongDescription</label>
+        <input asp-for="LongDescription" class="form-control" placeholder="LongDescription">
+        <span asp-validation-for="LongDescription" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Price">Price</label>
+        <input asp-for="Price" class="form-control" placeholder="Price">
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Photo">Photo</label>
+        <input asp-for="Photo" type="file" class="form-control" placeholder="Photo">
+        <span asp-validation-for="Photo" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+</form>

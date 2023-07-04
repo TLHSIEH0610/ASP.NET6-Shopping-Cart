@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc;
 using RamenKing.Interfaces;
 using RamenKing.Models;
+using RamenKing.ViewModel;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,9 +13,12 @@ namespace RamenKing.Controllers
     {
         private IRamenRepository _ramenRepository;
 
-        public RamenController(IRamenRepository ramenRepository)
+        private ICloudinaryService _cloudinaryService;
+
+        public RamenController(IRamenRepository ramenRepository, ICloudinaryService cloudinaryService)
         {
             _ramenRepository = ramenRepository;
+            _cloudinaryService = cloudinaryService;
 
         }
 
@@ -39,16 +40,26 @@ namespace RamenKing.Controllers
         {
             var currRamen = await _ramenRepository.GetRamenById(id);
 
-            return View(currRamen);
+            var currRamenVM = new EditRamenViewModel
+            {
+                Id = id,
+                Name = currRamen.Name,
+                ShortDescription = currRamen.ShortDescription,
+                LongDescription = currRamen.LongDescription,
+                Price = currRamen.Price,
+                ImageURL = currRamen.ImageURL
+            };
+
+            return View(currRamenVM);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Edit(int id, Ramen ramen)
+        public async Task<ActionResult> Edit(int id, EditRamenViewModel RamenVM)
         {
             if (!ModelState.IsValid)
             {
                 //trigger error prompt
-                return View(ramen);
+                return View(RamenVM);
             }
 
             var findRamen = await _ramenRepository.GetRamenById(id);
@@ -58,14 +69,33 @@ namespace RamenKing.Controllers
                 //trigger error prompt
             }
 
+            //Delete current Image
+            var currRamen = await _ramenRepository.GetRamenById(id);
+
+            if (!string.IsNullOrEmpty(currRamen.ImageURL))
+            {
+              await _cloudinaryService.DeletePhotoAsync(currRamen.ImageURL);
+            }
+
+            //Upload new Image
+
+            var url = "";
+
+            if (RamenVM.Photo != null)
+            {
+                 var result = await _cloudinaryService.AddPhotoAsync(RamenVM.Photo);
+                 url = result.Url.ToString();
+            }
+         
+            
             var updatedRamen = new Ramen
             {
                 Id = id,
-                Name= ramen.Name,
-                ShortDescription = ramen.ShortDescription,
-                LongDescription = ramen.LongDescription,
-                Price = ramen.Price,
-                ImageURL = ramen.ImageURL
+                Name = RamenVM.Name,
+                ShortDescription = RamenVM.ShortDescription,
+                LongDescription = RamenVM.LongDescription,
+                Price = RamenVM.Price,
+                ImageURL = url == "" ? findRamen.ImageURL : url
             };
 
             _ramenRepository.Update(updatedRamen);
@@ -74,16 +104,45 @@ namespace RamenKing.Controllers
 
          }
 
+        [HttpGet]
         public ActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create( Ramen Ramen)
+        public async Task<ActionResult> Create(EditRamenViewModel RamenVM)
         {
+            if(ModelState.IsValid)
+            {
+                var result = await _cloudinaryService.AddPhotoAsync(RamenVM.Photo);
+                var newRamen = new Ramen
+                {
+                    Name = RamenVM.Name,
+                    ShortDescription = RamenVM.ShortDescription,
+                    LongDescription = RamenVM.LongDescription,
+                    Price = RamenVM.Price,
+                    ImageURL = result.Url.ToString()
+                };
+                _ramenRepository.Add(newRamen);
+                return RedirectToAction("All");
 
-            return View();
+            }
+            else {
+                return View(RamenVM);
+            }
+
+            
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var currRamen = await _ramenRepository.GetRamenById(id);
+            _ramenRepository.Delete(currRamen);
+
+            await _cloudinaryService.DeletePhotoAsync(currRamen.ImageURL);
+
+            return RedirectToAction("All");
         }
     }
 }
