@@ -30,18 +30,27 @@ namespace RamenKing.Repository
             
             var cart =GetCart();
 
-            var ramen = await _ramenRepository.GetRamenById(ramenId);
+            var cartItem = cart.CartItems.FirstOrDefault(c => c.RamenId == ramenId);
 
-            var newCartItem = new CartItem()
+            if(cartItem == null)
             {
-                RamenId = ramen.Id,
-                RamenName = ramen.Name,
-                Quantity = 1,
-                Price = ramen.Price
-            };
+                var ramen = await _ramenRepository.GetRamenById(ramenId);
 
+                var newCartItem = new CartItem()
+                {
+                    RamenId = ramen.Id,
+                    RamenName = ramen.Name,
+                    Quantity = 1,
+                    Price = ramen.Price
+                };
 
-            cart.CartItems.Add(newCartItem);
+                cart.CartItems.Add(newCartItem);
+            }else
+            {
+
+                cartItem.Quantity++;
+            }
+
 
             return Save();
 
