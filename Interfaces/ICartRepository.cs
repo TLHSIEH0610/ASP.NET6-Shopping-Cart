@@ -4,9 +4,12 @@ namespace RamenKing.Interfaces
 {
     public interface ICartRepository
     {
-        void AddToCart(CartItem cartItem, int amount);
-        void RemoveFromCart(CartItem cartItem);
-        IEnumerable<CartItem> GetCartItems();
+        Task<bool> AddToCart(int ramenId);
+        Task<bool> RemoveFromCart(CartItem cartItem);
         Cart GetCart();
+        bool Add(CartItem cartItem);
+        bool Update(CartItem cartItem);
+        bool Delete(CartItem cartItem);
+        bool Save();
     }
 }

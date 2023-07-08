@@ -11,7 +11,12 @@
     <None Remove="Views\Account\" />
     <None Remove="ViewModel\" />
     <None Remove="Services\" />
-    <None Remove="Helpers\" />
+    <None Remove="Views\Cart\" />
+    <None Remove="Infrastructure\" />
+    <None Remove="Infrastructure\Helpers\" />
+    <None Remove="Infrastructure\Components\" />
+    <None Remove="Views\Shared\Components\" />
+    <None Remove="Views\Shared\Components\MenuCart\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
@@ -20,7 +25,12 @@
     <Folder Include="Views\Account\" />
     <Folder Include="ViewModel\" />
     <Folder Include="Services\" />
-    <Folder Include="Helpers\" />
+    <Folder Include="Views\Cart\" />
+    <Folder Include="Infrastructure\" />
+    <Folder Include="Infrastructure\Helpers\" />
+    <Folder Include="Infrastructure\Components\" />
+    <Folder Include="Views\Shared\Components\" />
+    <Folder Include="Views\Shared\Components\MenuCart\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\images\" />

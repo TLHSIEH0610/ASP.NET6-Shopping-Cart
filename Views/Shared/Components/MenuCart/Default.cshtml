@@ -1,0 +1,11 @@
+﻿@using RamenKing.ViewModel;
+@model MenuCartViewModel;
+
+
+
+    <button type="button" class="btn position-relative">
+        <i class="bi bi-cart" style="font-size: 1.3rem;"></i>
+        <span class="position-absolute top-10 start-80 translate-middle badge rounded-pill bg-danger">
+            @Model.CartCounts
+        </span>
+    </button>

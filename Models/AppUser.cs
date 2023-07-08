@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
 namespace RamenKing.Models
@@ -7,7 +8,6 @@ namespace RamenKing.Models
 	{
 		public string PostalAddress { get; set; }
 		public IEnumerable<Order>? Orders { get; set; }
-		public Cart? Cart { get; set; }
 		public string? PreferName{ get; set; }
 	}
 }
