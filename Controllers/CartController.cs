@@ -11,15 +11,19 @@ namespace RamenKing.Controllers
             _cartRepository = cartRepository;
         }
 
-        public IActionResult Index()
+        public IActionResult All()
         {
-            return View();
+            var cartItems = _cartRepository.GetCart();
+            return View(cartItems.CartItems);
         }
 
         public async Task<IActionResult> Add(int id)
         {
-             await _cartRepository.AddToCart(id);
-            return RedirectToAction("All", "Ramen");
+              await _cartRepository.AddToCart(id);
+            //return Redirect(redirect);
+            return Redirect(Request.Headers["Referer"].ToString());
         }
+
+    
     }
 }
