@@ -27,7 +27,7 @@
                 <td>@multi(item.Quantity, item.Price)</td>
                 <td>
                     <a class="btn btn-primary" asp-controller="Cart" asp-action="Add" asp-route-id="@item.RamenId" >+</a>
-                    <a class="btn btn-primary" >-</a>
+                    <a class="btn btn-primary" asp-controller="Cart" asp-action="Decrease" asp-route-id="@item.RamenId" >-</a>
                 </td>
             </tr>
         }

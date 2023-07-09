@@ -83,9 +83,35 @@ namespace RamenKing.Repository
         }
         
 
-        public Task<bool> RemoveFromCart(CartItem cartItem)
+        public bool RemoveFromCart(int ramenId)
         {
-            throw new NotImplementedException();
+            var cart = GetCart();
+
+            var cartItem =  cart.CartItems.FirstOrDefault(c => c.RamenId == ramenId);
+
+            if (cartItem.Quantity == 1)
+            {
+                cart.CartItems.RemoveAll(c =>c.RamenId == ramenId);
+                //var ramen = await _ramenRepository.GetRamenById(ramenId);
+
+                //var newCartItem = new CartItem()
+                //{
+                //    RamenId = ramen.Id,
+                //    RamenName = ramen.Name,
+                //    Quantity = 1,
+                //    Price = ramen.Price
+                //};
+
+                //cart.CartItems.Add(newCartItem);
+            }
+            else
+            {
+                cartItem.Quantity--;
+                //cartItem.Quantity++;
+            }
+
+
+            return Save();
         }
 
         public bool Save()

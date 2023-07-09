@@ -24,6 +24,11 @@ namespace RamenKing.Controllers
             return Redirect(Request.Headers["Referer"].ToString());
         }
 
+        public  IActionResult Decrease(int id)
+        {
+             _cartRepository.RemoveFromCart(id);
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
     
     }
 }

@@ -5,7 +5,7 @@ namespace RamenKing.Interfaces
     public interface ICartRepository
     {
         Task<bool> AddToCart(int ramenId);
-        Task<bool> RemoveFromCart(CartItem cartItem);
+        bool RemoveFromCart(int ramenId);
         Cart GetCart();
         bool Add(CartItem cartItem);
         bool Update(CartItem cartItem);
